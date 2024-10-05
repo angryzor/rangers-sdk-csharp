@@ -1,4 +1,3 @@
-using CppSharp.Types.Std.CLI;
 using RangersSDK.Csl.Ut;
 using RangersSDK.Hh.Game;
 using RangersSDK.Hh.Game.Dmenu;
@@ -8,7 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Metrics;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -21,10 +19,10 @@ namespace RangersSDK.Csl.Ut
     }
     public unsafe interface ArrayInternalProvider<U> where U : unmanaged
     {
-        internal U* Buffer { get; set; }
-        internal uint Length { get; set; }
-        internal uint Capacity { get; set; }
-        internal nint Allocator { get; set; }
+        public U* Buffer { get; set; }
+        public uint Length { get; set; }
+        public uint Capacity { get; set; }
+        public nint Allocator { get; set; }
     }
 
     public unsafe abstract partial class Array<T, U, Iso, I> : IList<T>, IDisposable

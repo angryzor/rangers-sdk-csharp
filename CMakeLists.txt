@@ -13,8 +13,10 @@ endif()
 set(CPPSHARP_LOCATION CACHE STRING "CppSharp location (bin output dir)")
 cmake_path(SET CPPSHARP_LOCATION_NORMALIZED NORMALIZE ${CPPSHARP_LOCATION})
 
-set(CPPSHARP_REFERENCE_ASSEMBLIES CppSharp.Runtime.dll CppSharp.AST.dll CppSharp.dll CppSharp.Generator.dll CppSharp.Parser.CSharp.dll CppSharp.Parser.dll)
+set(CPPSHARP_REFERENCE_ASSEMBLIES CppSharp.AST.dll CppSharp.dll CppSharp.Generator.dll CppSharp.Parser.CSharp.dll CppSharp.Parser.dll)
 list(TRANSFORM CPPSHARP_REFERENCE_ASSEMBLIES PREPEND "${CPPSHARP_LOCATION_NORMALIZED}/")
+set(CPPSHARP_REFERENCE_ASSEMBLIES_RUNTIME CppSharp.Runtime.dll)
+list(TRANSFORM CPPSHARP_REFERENCE_ASSEMBLIES_RUNTIME PREPEND "${CPPSHARP_LOCATION_NORMALIZED}/")
 
 add_subdirectory(${RANGERS_SDK_PATH} rangers-sdk EXCLUDE_FROM_ALL)
 
