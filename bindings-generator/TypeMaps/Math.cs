@@ -1,72 +1,74 @@
 using CppSharp.AST;
 using CppSharp.Generators;
+using CppSharp.Generators.CSharp;
 using CppSharp.Types;
+using System.Runtime.Intrinsics;
 
 namespace RangersSDKBindingsGenerator.TypeMaps
 {
-    [TypeMap("csl::math::Vector2", GeneratorKind.CSharp)]
-    public class Vector2 : TypeMap
+    [TypeMap("csl::math::Vector2", GeneratorKindID = GeneratorKind.CSharp_ID)]
+    public class Vector2 : ShimmedValueTypeMap
     {
-        public override CppSharp.AST.Type CSharpSignatureType(TypePrinterContext ctx)
+        protected override string TypeName => $"global::System.Numerics.Vector2";
+
+        public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             return new CILType(typeof(System.Numerics.Vector2));
         }
-
-        public override bool IsValueType => true;
     }
 
-    [TypeMap("csl::math::Vector3", GeneratorKind.CSharp)]
-    public class Vector3 : TypeMap
+    [TypeMap("csl::math::Vector3", GeneratorKindID = GeneratorKind.CSharp_ID)]
+    public class Vector3 : ShimmedValueTypeMap
     {
-        public override CppSharp.AST.Type CSharpSignatureType(TypePrinterContext ctx)
+        protected override string TypeName => $"global::System.Numerics.Vector3";
+
+        public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             return new CILType(typeof(System.Numerics.Vector3));
         }
-
-        public override bool IsValueType => true;
     }
 
-    [TypeMap("csl::math::Vector4", GeneratorKind.CSharp)]
-    public class Vector4 : TypeMap
+    [TypeMap("csl::math::Vector4", GeneratorKindID = GeneratorKind.CSharp_ID)]
+    public class Vector4 : ShimmedValueTypeMap
     {
-        public override CppSharp.AST.Type CSharpSignatureType(TypePrinterContext ctx)
+        protected override string TypeName => $"global::System.Numerics.Vector4";
+
+        public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             return new CILType(typeof(System.Numerics.Vector4));
         }
-
-        public override bool IsValueType => true;
     }
 
-    [TypeMap("csl::math::Quaternion", GeneratorKind.CSharp)]
-    public class Quaternion : TypeMap
+    [TypeMap("csl::math::Quaternion", GeneratorKindID = GeneratorKind.CSharp_ID)]
+    public class Quaternion : ShimmedValueTypeMap
     {
-        public override CppSharp.AST.Type CSharpSignatureType(TypePrinterContext ctx)
+        protected override string TypeName => $"global::System.Numerics.Quaternion";
+
+        public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             return new CILType(typeof(System.Numerics.Quaternion));
         }
-
-        public override bool IsValueType => true;
     }
 
-    [TypeMap("csl::math::Matrix34", GeneratorKind.CSharp)]
-    public class Matrix34 : TypeMap
+    [TypeMap("csl::math::Matrix34", GeneratorKindID = GeneratorKind.CSharp_ID)]
+    public class Matrix34 : ShimmedValueTypeMap
     {
-        public override CppSharp.AST.Type CSharpSignatureType(TypePrinterContext ctx)
+        protected override string TypeName => $"global::System.Numerics.Matrix4x4";
+
+        public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             return new CILType(typeof(System.Numerics.Matrix4x4));
         }
-
-        public override bool IsValueType => true;
     }
 
-    [TypeMap("csl::math::Matrix44", GeneratorKind.CSharp)]
-    public class Matrix44 : TypeMap
+    [TypeMap("csl::math::Matrix44", GeneratorKindID = GeneratorKind.CSharp_ID)]
+    public class Matrix44 : ShimmedValueTypeMap
     {
-        public override CppSharp.AST.Type CSharpSignatureType(TypePrinterContext ctx)
+        protected override string TypeName => $"global::System.Numerics.Matrix4x4";
+
+        public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             return new CILType(typeof(System.Numerics.Matrix4x4));
         }
-
-        public override bool IsValueType => true;
     }
 }
