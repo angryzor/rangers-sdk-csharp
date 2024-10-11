@@ -28,6 +28,17 @@ namespace RangersSDKBindingsGenerator.TypeMaps
         }
     }
 
+    [TypeMap("csl::math::Position", GeneratorKindID = GeneratorKind.CSharp_ID)]
+    public class Position : ShimmedValueTypeMap
+    {
+        protected override string TypeName => $"global::System.Numerics.Vector3";
+
+        public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
+        {
+            return new CILType(typeof(System.Numerics.Vector3));
+        }
+    }
+
     [TypeMap("csl::math::Vector4", GeneratorKindID = GeneratorKind.CSharp_ID)]
     public class Vector4 : ShimmedValueTypeMap
     {

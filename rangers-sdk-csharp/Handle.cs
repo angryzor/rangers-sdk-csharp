@@ -1,6 +1,6 @@
 using System;
 
-namespace RangersSDK.Hh.Fnd
+namespace RangersSDK.Hedgehog.Foundation
 {
     public struct HandleBase
     {

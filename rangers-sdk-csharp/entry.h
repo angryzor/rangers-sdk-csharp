@@ -1,9 +1,13 @@
+#define WIN32_LEAN_AND_MEAN
+
 #include <new>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <windows.h>
 #include <d3d11.h>
+
+#ifndef RANGERS_SDK_CSHARP_NO_SHIMS
 
 namespace csl::math {
 	struct Vector2 {
@@ -73,5 +77,6 @@ namespace csl::math {
 
 #define NO_EIGEN_MATH
 #define NO_METADATA
+#endif
 
 #include "../rangers-sdk/include/rangers-sdk.h"

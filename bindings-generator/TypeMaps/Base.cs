@@ -33,7 +33,7 @@ namespace RangersSDKBindingsGenerator.TypeMaps {
 
         public override string CSharpConstruct()
         {
-            return $"new __IntPtr(new {TypeName}(global::RangersSDK.Hh.Fnd.MemoryRouter.ModuleAllocator).instance)";
+            return $"new __IntPtr(new {TypeName}(global::RangersSDK.Hedgehog.Foundation.MemoryRouter.ModuleAllocator).instance)";
         }
     }
 

@@ -9,7 +9,7 @@ namespace RangersSDKBindingsGenerator.Passes
     {
         public override bool VisitFieldDecl(Field field)
         {
-            string[] classes = { "MoveArray", "MoveArray32", "InplaceMoveArray", "LinkList", "PointerMap", "StringMap" };
+            string[] classes = { "MoveArray", "MoveArray32", "InplaceMoveArray", "InplaceBitArray", "LinkList", "PointerMap", "StringMap" };
             foreach (string className in classes)
             {
                 if (field.Type.TryGetClass(out var @class) && @class.Name == className)

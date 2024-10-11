@@ -12,7 +12,7 @@ namespace RangersSDKBindingsGenerator.Passes
             if (!base.VisitClassTemplateDecl(template))
                 return false;
 
-            if (template.Name != "Bitset" || template.Namespace.Name != "ut")
+            if (template.Name != "Bitset" || template.Namespace.Name != "Utility")
                 return false;
 
             //template.ExplicitlyIgnore();

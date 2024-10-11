@@ -39,7 +39,7 @@ namespace RangersSDKBindingsGenerator
         {
             ctx.FindClass("ResAnimation").First().IsStatic = false;
 
-            //foreach (var @class in ctx.FindClass("MoveArray32"))
+            //foreach (var @class in ctx.FindClass("InplaceMoveArray"))
             //{
             //    @class.GenerationKind = GenerationKind.Generate;
             //    foreach (var spec in @class.Specializations)
@@ -73,8 +73,13 @@ namespace RangersSDKBindingsGenerator
             ctx.IgnoreClassWithName("MousePickingViewer");
             ctx.IgnoreClassWithName("PhysicsMousePickingViewer");
             ctx.IgnoreClassWithName("PhysicsViewerContext");
+            ctx.IgnoreClassWithName("GameViewerBase");
             ctx.IgnoreClassWithName("PhysicsViewerBase");
             ctx.IgnoreClassWithName("PhysicsPickedObjectViewer");
+            ctx.IgnoreClassWithName("ObjectViewerContext");
+            ctx.IgnoreClassWithName("GameViewerContext");
+            ctx.IgnoreClassWithName("ServiceViewerContextBase");
+            ctx.IgnoreClassWithName("ViewerContext");
             ctx.IgnoreClassWithName("GameJobQueue");
             ctx.IgnoreClassWithName("JobInitializer");
             //ctx.IgnoreClassWithName("ActionMapping");
@@ -95,6 +100,17 @@ namespace RangersSDKBindingsGenerator
             ctx.IgnoreClassWithName("Handle");
             ctx.IgnoreClassWithName("DrawSystem");
             ctx.IgnoreClassWithName("AsmData");
+            ctx.IgnoreClassWithName("CastListener");
+            ctx.IgnoreClassWithName("Reference");
+            ctx.IgnoreClassWithName("intrusive_ptr");
+            ctx.IgnoreClassWithName("MessageAsyncHandlerInplace");
+            ctx.IgnoreClassWithName("ResReflectionT");
+            ctx.IgnoreClassWithName("RenderingEngineNeedle");
+            ctx.IgnoreClassWithName("RenderingEngineRangers");
+            ctx.IgnoreClassWithName("RenderManager");
+            ctx.IgnoreClassWithName("GOCVisualUserModel");
+            ctx.IgnoreClassWithName("GOCVisualModelImpl");
+            ctx.IgnoreClassWithName("ObjSumoPoleSlingshotLineConfig");
 
             ctx.SetClassAsValueType("Vector2");
             ctx.SetClassAsValueType("Vector3");
@@ -102,55 +118,90 @@ namespace RangersSDKBindingsGenerator
             ctx.SetClassAsValueType("Quaternion");
             ctx.SetClassAsValueType("Matrix34");
             ctx.SetClassAsValueType("Matrix44");
+            ctx.SetClassAsValueType("Position");
             ctx.SetClassAsValueType("HandleBase");
-            foreach (ClassTemplate item in ctx.FindDecl<ClassTemplate>("Handle"))
-            {
-                item.TemplatedClass.Type = ClassType.ValueType;
 
-                foreach (var specialization in item.Specializations)
+            ctx.SetClassAsValueType("RflClassEnum");
+            ctx.SetClassAsValueType("RflClassEnumMember");
+            ctx.SetClassAsValueType("RflClassMember");
+            ctx.SetClassAsValueType("RflCustomAttribute");
+            ctx.SetClassAsValueType("RflEntity");
+            ctx.SetClassAsValueType("HandleBase");
+            ctx.SetClassAsValueType("VariableString");
+            foreach (string className in new string[] { "Handle", "RflArray" })
+            {
+                foreach (ClassTemplate item in ctx.FindDecl<ClassTemplate>(className))
                 {
-                    specialization.Type = ClassType.ValueType;
+                    item.TemplatedClass.Type = ClassType.ValueType;
+
+                    foreach (var specialization in item.Specializations)
+                    {
+                        specialization.Type = ClassType.ValueType;
+                    }
                 }
             }
+            //foreach (ClassTemplate item in ctx.FindDecl<ClassTemplate>("intrusive_ptr"))
+            //{
+            //    item.TemplatedClass.Type = ClassType.ValueType;
+
+            //    foreach (var specialization in item.Specializations)
+            //    {
+            //        specialization.Type = ClassType.ValueType;
+            //    }
+            //}
+            //foreach (ClassTemplate item in ctx.FindDecl<ClassTemplate>("Reference"))
+            //{
+            //    item.TemplatedClass.Type = ClassType.ValueType;
+
+            //    foreach (var specialization in item.Specializations)
+            //    {
+            //        specialization.Type = ClassType.ValueType;
+            //    }
+            //}
 
 
-            driver.Context.TypeMaps.FindTypeMap("hh::fnd::Handle", GeneratorKind.CSharp, out var handleTypeMap);
-            foreach (ClassTemplate item in ctx.FindDecl<ClassTemplate>("Handle"))
+            foreach (var (@namespace, @class) in new[] { ("hh::fnd", "Handle") })
             {
-                foreach (var specialization in item.Specializations)
+                driver.Context.TypeMaps.FindTypeMap($"{@namespace}::{@class}", GeneratorKind.CSharp, out var handleTypeMap);
+                foreach (ClassTemplate item in ctx.FindDecl<ClassTemplate>(@class))
                 {
-                    var typePrinter = new CppTypePrinter(driver.Generator.Context)
+                    foreach (var specialization in item.Specializations)
                     {
-                        ResolveTypeMaps = false,
-                        PrintTypeQualifiers = false,
-                        PrintTypeModifiers = false,
-                        PrintLogicalNames = true
-                    };
-
-                    typePrinter.PushContext(TypePrinterContextKind.Native);
-
-                    foreach (var resolveTypeDefs in new[] { false, true })
-                    {
-                        foreach (var typePrintScopeKind in
-                            new[] { TypePrintScopeKind.Local, TypePrintScopeKind.Qualified })
+                        var typePrinter = new CppTypePrinter(driver.Generator.Context)
                         {
-                            typePrinter.ResolveTypedefs = resolveTypeDefs;
-                            typePrinter.PushScope(typePrintScopeKind);
-                            var typeName = specialization.Visit(typePrinter);
-                            typePrinter.PopScope();
-                            driver.Context.TypeMaps.TypeMaps[typeName] = handleTypeMap;
+                            ResolveTypeMaps = false,
+                            PrintTypeQualifiers = false,
+                            PrintTypeModifiers = false,
+                            PrintLogicalNames = true
+                        };
+
+                        typePrinter.PushContext(TypePrinterContextKind.Native);
+
+                        foreach (var resolveTypeDefs in new[] { false, true })
+                        {
+                            foreach (var typePrintScopeKind in
+                                new[] { TypePrintScopeKind.Local, TypePrintScopeKind.Qualified })
+                            {
+                                typePrinter.ResolveTypedefs = resolveTypeDefs;
+                                typePrinter.PushScope(typePrintScopeKind);
+                                var typeName = specialization.Visit(typePrinter);
+                                typePrinter.PopScope();
+                                driver.Context.TypeMaps.TypeMaps[typeName] = handleTypeMap;
+                            }
                         }
                     }
                 }
             }
 
+            ctx.IgnoreHeadersWithName("hhRflArray.h");
             ctx.IgnoreHeadersWithName("hhHandle.h");
             ctx.IgnoreHeadersWithName("Delegate.h");
 
             ctx.IgnoreFunctionWithName("EntryUniqueElementControl");
             ctx.IgnoreFunctionWithName("LeaveUniqueElementControl");
 
-            //ctx.FindClass("PhysicsWorld").First().ExcludeFromPasses.Add(typeof(CppSharp.Passes.GetterSetterToPropertyPass));
+            ctx.FindClass("Singleton").First().ExcludeFromPasses.Add(typeof(CppSharp.Passes.TrimSpecializationsPass));
+            ctx.FindClass("Singleton").First().ExcludeFromPasses.Add(typeof(CppSharp.Passes.SpecializationMethodsWithDependentPointersPass));
             //ctx.FindClass("PhysicsWorldBullet").First().ExcludeFromPasses.Add(typeof(CppSharp.Passes.GetterSetterToPropertyPass));
             //ctx.FindClass("TagReplaceable").First().ExcludeFromPasses.Add(typeof(CppSharp.Passes.GetterSetterToPropertyPass));
             //ctx.FindClass("TagReplacer").First().ExcludeFromPasses.Add(typeof(CppSharp.Passes.GetterSetterToPropertyPass));
@@ -182,16 +233,54 @@ namespace RangersSDKBindingsGenerator
             foreach (TranslationUnit unit in ctx.TranslationUnits)
             {
                 //unit.FindNamespace("hh")?.FindNamespace("needle")?.FindNamespace("ImplDX11")?.ExplicitlyIgnore();
-                unit.FindNamespace("hh")?.FindNamespace("gfx")?.ExplicitlyIgnore();
+                //unit.FindNamespace("hh")?.FindNamespace("gfx")?.ExplicitlyIgnore();
                 //unit.FindNamespace("hh")?.FindNamespace("gfnd")?.ExplicitlyIgnore();
                 unit.FindNamespace("hh")?.FindNamespace("needle")?.ExplicitlyIgnore();
                 unit.FindNamespace("hh")?.FindNamespace("rsdx")?.ExplicitlyIgnore();
                 unit.FindNamespace("hh")?.FindNamespace("ui")?.ExplicitlyIgnore();
+                unit.FindNamespace("hh")?.FindNamespace("dbg")?.ExplicitlyIgnore();
+                unit.FindNamespace("hh")?.FindNamespace("game")?.FindNamespace("dmenu")?.ExplicitlyIgnore();
                 unit.FindNamespace("app")?.ExplicitlyIgnore();
-                unit.FindNamespace("heur")?.ExplicitlyIgnore();
+                //unit.FindNamespace("heur")?.ExplicitlyIgnore();
                 unit.FindNamespace("csl")?.FindNamespace("ut")?.ExplicitlyIgnore();
+                unit.FindNamespace("csl")?.FindNamespace("math")?.ExplicitlyIgnore();
                 //unit.FindNamespace("Cyan")?.ExplicitlyIgnore();
             }
+
+            ctx.RenameNamespace("csl::fnd", "Foundation");
+            ctx.RenameNamespace("csl::ut", "Utility");
+            ctx.RenameNamespace("csl::geom", "Geometry");
+
+            ctx.RenameNamespace("hh::ut", "Utility");
+            ctx.RenameNamespace("hh::fnd", "Foundation");
+            ctx.RenameNamespace("hh::anim", "Animation");
+            ctx.RenameNamespace("hh::cri", "CRI");
+            ctx.RenameNamespace("hh::dbg", "Debug");
+            ctx.RenameNamespace("hh::dv", "DvScene");
+            ctx.RenameNamespace("hh::eff", "Effects");
+            ctx.RenameNamespace("hh::fw", "Framework");
+            ctx.RenameNamespace("hh::gfnd", "GraphicsFoundation");
+            ctx.RenameNamespace("hh::gfx", "Graphics");
+            ctx.RenameNamespace("hh::hid", "HID");
+            ctx.RenameNamespace("hh::snd", "Sound");
+            ctx.RenameNamespace("hh::ui", "UI");
+
+            ctx.RenameNamespace("app_cmn::fsm", "FSM");
+            ctx.RenameNamespace("app_cmn::rfl", "Reflection");
+
+            ctx.RenameNamespace("app::ut", "Utility");
+            ctx.RenameNamespace("app::fnd", "Foundation");
+            ctx.RenameNamespace("app::gfx", "Graphics");
+            ctx.RenameNamespace("app::hid", "HID");
+            ctx.RenameNamespace("app::snd", "Sound");
+            ctx.RenameNamespace("app::evt", "Events");
+            ctx.RenameNamespace("app::trr", "Terrain");
+            ctx.RenameNamespace("app::ui", "UI");
+
+            ctx.RenameNamespace("csl", "CSLib");
+            ctx.RenameNamespace("hh", "Hedgehog");
+            ctx.RenameNamespace("app", "Application");
+            ctx.RenameNamespace("app_cmn", "ApplicationCommon");
         }
 
         public void Setup(Driver driver)
@@ -201,17 +290,40 @@ namespace RangersSDKBindingsGenerator
             driver.Options.GeneratorKind = GeneratorKind.CSharp;
             driver.Options.CompileCode = false;
             driver.Options.OutputDir = outputDir;
+            driver.Options.CustomClassCodeCallback += GenerateInteropIsomorphism;
+            driver.Options.GenerateClassTemplates = true;
 
             var module = driver.Options.AddModule("RangersSDK");
             module.SharedLibraryName = "rangers-sdk";
             module.IncludeDirs.Add(@"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include");
-            foreach (var includeDir in include.Split(";")) {
+            foreach (var includeDir in include.Split(";"))
+            {
                 if (includeDir != "")
                     module.IncludeDirs.Add(includeDir);
             }
             module.Headers.Add(entry);
             module.LibraryDirs.Add(Path.GetDirectoryName(lib));
             module.Libraries.Add(Path.GetFileName(lib));
+        }
+
+        public static void GenerateInteropIsomorphism(CodeGenerator gen, Class @class)
+        {
+            if (!@class.IsAbstractImpl && @class.IsRefType && !@class.IsStatic && (gen.Options.GetClassGenerationOptions?.Invoke(@class)?.GenerateNativeToManaged ?? true))
+            {
+                var typeName = @class.Name;
+
+                if (@class.IsDependent && @class.TemplateParameters.Any())
+                    typeName += $"<{string.Join(", ", @class.TemplateParameters.Select(p => p.Name))}>";
+
+                gen.PushBlock(BlockKind.Class);
+                gen.WriteLines($@"public new class __InteropIsomorphism : global::RangersSDK.Interop.InteropIsomorphism<{typeName}, nint>
+{{
+    public nint GetUnmanaged({typeName} obj) {{ return obj.__Instance; }}
+    public {typeName} GetManaged(nint obj) {{ return {typeName}.__GetOrCreateInstance(obj, false, true); }}
+    public void ReleaseUnmanaged(nint obj) {{ }}
+}}");
+                gen.PopBlock(NewLineKind.BeforeNextBlock);
+            }
         }
 
         public void SetupPasses(Driver driver)

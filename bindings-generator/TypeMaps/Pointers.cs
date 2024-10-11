@@ -12,7 +12,7 @@ namespace RangersSDKBindingsGenerator.TypeMaps
         public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             var typePrinter = new CSharpTypePrinter(Context);
-            return ctx.Type.IsReference() || ctx.MarshalKind == MarshalKind.NativeField ? new CustomType(typePrinter.IntPtrType) : new CustomType((ctx.Type as TemplateSpecializationType).Arguments[0].Type.Visit(typePrinter).Type);
+            return ctx.Type.IsReference() || (ctx.Type.TryGetClass(out Class @class) && @class.GenerationKind == GenerationKind.None) || ctx.MarshalKind == MarshalKind.NativeField ? new CustomType(typePrinter.IntPtrType) : new CustomType((ctx.Type as TemplateSpecializationType).Arguments[0].Type.Visit(typePrinter).Type);
         }
 
         public override bool IsValueType => true;
@@ -51,7 +51,7 @@ namespace RangersSDKBindingsGenerator.TypeMaps
     [TypeMap("hh::fnd::HandleBase", GeneratorKindID = GeneratorKind.CSharp_ID)]
     public class HandleBaseTypeMap : ShimmedValueTypeMap
     {
-        protected override string TypeName => $"global::RangersSDK.Hh.Fnd.HandleBase";
+        protected override string TypeName => $"global::RangersSDK.Hedgehog.Foundation.HandleBase";
     }
 
     [TypeMap("hh::fnd::Handle", GeneratorKindID = GeneratorKind.CSharp_ID)]
@@ -67,9 +67,9 @@ namespace RangersSDKBindingsGenerator.TypeMaps
                 TagType tagType = pointee as TagType;
 
                 if (specType != null)
-                    return $"global::RangersSDK.Hh.Fnd.Handle<{specType.Arguments[0].Type.Visit(typePrinter).Type}>";
+                    return $"global::RangersSDK.Hedgehog.Foundation.Handle<{specType.Arguments[0].Type.Visit(typePrinter).Type}>";
                 else if (tagType != null)
-                    return $"global::RangersSDK.Hh.Fnd.Handle<{(tagType.Declaration as ClassTemplateSpecialization).Arguments[0].Type.Visit(typePrinter).Type}>";
+                    return $"global::RangersSDK.Hedgehog.Foundation.Handle<{(tagType.Declaration as ClassTemplateSpecialization).Arguments[0].Type.Visit(typePrinter).Type}>";
 
                 return "itsallfuckedup";
             }
@@ -82,7 +82,7 @@ namespace RangersSDKBindingsGenerator.TypeMaps
         public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
             var typePrinter = new CSharpTypePrinter(Context);
-            return ctx.Type.IsReference() ? new CustomType(typePrinter.IntPtrType) : new CustomType($"global::RangersSDK.Hh.Fnd.ResReflection");
+            return ctx.Type.IsReference() ? new CustomType(typePrinter.IntPtrType) : new CustomType($"global::RangersSDK.Hedgehog.Foundation.ResReflection");
         }
     }
 }
