@@ -40,6 +40,7 @@ namespace RangersSDKBindingsGenerator.TypeMaps {
     public abstract class ShimmedValueTypeMap : TypeMap
     {
         protected abstract string TypeName { get; }
+        protected virtual string InternalTypeName => TypeName;
 
         public override CppSharp.AST.Type SignatureType(TypePrinterContext ctx)
         {
@@ -49,7 +50,7 @@ namespace RangersSDKBindingsGenerator.TypeMaps {
         public override void MarshalToManaged(MarshalContext ctx)
         {
             if (ctx.Parameter != null && !ctx.Parameter.IsOut && !ctx.Parameter.IsInOut)
-                ctx.Return.Write($"*({TypeName}*){ctx.Parameter.Name}");
+                ctx.Return.Write($"(*({InternalTypeName}*){ctx.Parameter.Name})");
             else
             {
                 if (
@@ -57,13 +58,13 @@ namespace RangersSDKBindingsGenerator.TypeMaps {
                     || (ctx.Function != null && ctx.Function.HasIndirectReturnTypeParameter))
                     ctx.Return.Write(ctx.ReturnVarName);
                 else
-                    ctx.Return.Write($"*({TypeName}*){ctx.ReturnVarName}");
+                    ctx.Return.Write($"(*({InternalTypeName}*){ctx.ReturnVarName})");
             }
         }
 
         public override void MarshalToNative(MarshalContext ctx)
         {
-             var typePrinter = new CSharpTypePrinter(Context);
+            var typePrinter = new CSharpTypePrinter(Context);
             if (ctx.Parameter != null) {
                 if (ctx.Parameter.Type.IsReference() || ctx.Parameter.Type.IsPointer())
                     ctx.Return.Write($"new {typePrinter.IntPtrType}(&{ctx.Parameter.Name})");

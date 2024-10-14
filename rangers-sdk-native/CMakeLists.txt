@@ -2,7 +2,7 @@ add_library(rangers-sdk-native SHARED)
 add_dependencies(rangers-sdk-native rangers-sdk-csharp)
 
 target_compile_features(rangers-sdk-native PRIVATE cxx_std_20)
-target_compile_options(rangers-sdk-native PRIVATE /permissive-)
+target_compile_options(rangers-sdk-native PRIVATE /permissive- /Ob0)
 target_compile_definitions(rangers-sdk-native
     PRIVATE
         RANGERS_SDK_CSHARP_NO_SHIMS=1

@@ -200,7 +200,7 @@ namespace RangersSDKBindingsGenerator.TypeMaps
                 if (ctx.ReturnVarName.LastIndexOf('.') > ctx.ReturnVarName.LastIndexOf("->"))
                 {
                     assignVar = Generator.GeneratedIdentifier(ctx.ArgName);
-                    ctx.Before.WriteLine($"fixed (global::RangersSDK.Hedgehog.Foundation.RflArrayInternal* {assignVar} = &{ctx.ReturnVarName})");
+                    ctx.Before.WriteLine($"fixed (global::RangersSDK.Hedgehog.Foundation.RflArrayInternal<{TypeName}.__Internal>* {assignVar} = &{ctx.ReturnVarName})");
                     ctx.Before.WriteOpenBraceAndIndent();
                     (ctx as CSharpMarshalContext).HasCodeBlock = true;
                 }

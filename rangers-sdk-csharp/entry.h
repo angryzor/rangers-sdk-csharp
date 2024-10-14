@@ -7,14 +7,14 @@
 #include <windows.h>
 #include <d3d11.h>
 
-#ifndef RANGERS_SDK_CSHARP_NO_SHIMS
-
 namespace csl::math {
-	struct Vector2 {
+	class Vector2 {
+	public:
 		float x; float y;
 	};
 
-	struct alignas(16) Vector3 {
+	class alignas(16) Vector3 {
+	public:
 		float x; float y; float z;
 
 		inline bool operator==(const Vector3& other) const {
@@ -26,11 +26,13 @@ namespace csl::math {
 		}
 	};
 
-	struct alignas(16) Vector4 {
+	class alignas(16) Vector4 {
+	public:
 		float x; float y; float z; float w;
 	};
 
-	struct alignas(16) Quaternion  {
+	class alignas(16) Quaternion  {
+	public:
 		float x; float y; float z; float w;
 
 		inline bool operator==(const Quaternion& other) const {
@@ -42,15 +44,18 @@ namespace csl::math {
 		}
 	};
 
-	struct alignas(16) Matrix44 {
+	class alignas(16) Matrix44 {
+	public:
 		Vector4 t; Vector4 u; Vector4 v; Vector4 w;
 	};
 
-	struct alignas(16) Matrix34 {
+	class alignas(16) Matrix34 {
+	public:
 		Vector4 t; Vector4 u; Vector4 v; Vector4 w;
 	};
 
-	struct Position {
+	class Position {
+	public:
 		float x; float y; float z;
 
 		inline bool operator==(const Position& other) const {
@@ -62,7 +67,8 @@ namespace csl::math {
 		}
 	};
 
-	struct Rotation {
+	class Rotation {
+	public:
 		float x; float y; float z; float w;
 
 		inline bool operator==(const Rotation& other) const {
@@ -76,6 +82,8 @@ namespace csl::math {
 }
 
 #define NO_EIGEN_MATH
+
+#ifndef RANGERS_SDK_CSHARP_NO_SHIMS
 #define NO_METADATA
 #endif
 

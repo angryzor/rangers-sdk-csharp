@@ -1,7 +1,9 @@
 add_library(rangers-sdk-csharp SHARED)
 add_dependencies(rangers-sdk-csharp rangers-sdk)
+message(STATUS "Using CppSharp location ${CPPSHARP_LOCATION_NORMALIZED}")
 add_custom_command(
     OUTPUT RangersSDK.cs RangersSDK-symbols.cpp rangers-sdk.def
+    COMMAND ${CMAKE_COMMAND} -E "copy_directory" "${CPPSHARP_LOCATION_NORMALIZED}/lib" "$<TARGET_FILE_DIR:bindings-generator>/lib"
     COMMAND ${CMAKE_COMMAND} -E "copy" "${CPPSHARP_LOCATION_NORMALIZED}/ijwhost.dll" "$<TARGET_FILE_DIR:bindings-generator>"
     COMMAND ${CMAKE_COMMAND} -E "copy" "${CPPSHARP_LOCATION_NORMALIZED}/CppSharp.CppParser.dll" "$<TARGET_FILE_DIR:bindings-generator>"
     COMMAND ${CMAKE_COMMAND} -E "copy" "${CPPSHARP_LOCATION_NORMALIZED}/Std-symbols.dll" "$<TARGET_FILE_DIR:bindings-generator>"
@@ -12,6 +14,8 @@ add_custom_command(
 target_sources(rangers-sdk-csharp
     PRIVATE
         "RangersSDK.cs"
+        "Extensions/GameObject.cs"
+        "Extensions/ResourceManager.cs"
         "Interop/InteropIsomorphism.cs"
         "Interop/Memory.cs"
         "Interop/RefTypeReplacement.cs"

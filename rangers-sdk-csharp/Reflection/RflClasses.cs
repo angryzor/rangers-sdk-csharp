@@ -90,11 +90,6 @@ namespace RangersSDK.Reflection
             };
         }
 
-        static uint Align(uint offset, uint alignment)
-        {
-            return (offset + alignment - 1) & ~(alignment - 1);
-        }
-
         public static RflClass GenerateRflClass(Type type)
         {
             uint offset = 0;
@@ -112,14 +107,14 @@ namespace RangersSDK.Reflection
             RflClassMember[] members = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Select(field =>
             {
                 var alignment = GetAlignment(field.FieldType);
-                offset = Align(offset, alignment);
+                offset = RangersSDK.Interop.Memory.Align(offset, alignment);
                 var member = GenerateRflClassMember(field, offset);
                 offset += GetSize(field.FieldType);
                 maxAlignment = System.Math.Max(maxAlignment, alignment);
                 return member;
             }).ToArray();
 
-            offset = Align(offset, maxAlignment);
+            offset = RangersSDK.Interop.Memory.Align(offset, maxAlignment);
 
             return new RflClass
             {

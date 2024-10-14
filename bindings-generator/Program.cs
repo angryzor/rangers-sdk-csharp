@@ -111,6 +111,29 @@ namespace RangersSDKBindingsGenerator
             ctx.IgnoreClassWithName("GOCVisualUserModel");
             ctx.IgnoreClassWithName("GOCVisualModelImpl");
             ctx.IgnoreClassWithName("ObjSumoPoleSlingshotLineConfig");
+            ctx.IgnoreClassWithName("ObjShadowTailsPlayerCompareSpawner");
+            ctx.IgnoreClassWithName("WarshipLocatorInfo");
+            ctx.IgnoreClassWithName("MonologueIslandParameters");
+            ctx.IgnoreClassWithName("MonologueMultiTextParameters");
+            ctx.IgnoreClassWithName("PracticeText");
+            ctx.IgnoreClassWithName("NoisePresetParameters");
+            ctx.IgnoreClassWithName("BossDragonMoveParam");
+            ctx.IgnoreClassWithName("BossDragonConfig");
+            ctx.IgnoreClassWithName("KnightCyFloatSpearConfig");
+            ctx.IgnoreClassWithName("BossRifleBeastBattleAttackClaw");
+            ctx.IgnoreClassWithName("MirageAnimData");
+            ctx.IgnoreClassWithName("EnemyAquaballActionConfig");
+            ctx.IgnoreClassWithName("MiniBossChagerChaseShot");
+            ctx.IgnoreClassWithName("MiniBossChagerDiffuseLaser");
+            ctx.IgnoreClassWithName("EffectRecord");
+            ctx.IgnoreClassWithName("PlayerParamCrossSlash");
+            ctx.IgnoreClassWithName("PlayerParamSmash");
+            ctx.IgnoreClassWithName("MiniBossWarshipSpawner");
+            ctx.IgnoreClassWithName("MonologueParameters");
+            ctx.IgnoreClassWithName("MiniBossChargerCommonParam");
+            ctx.IgnoreClassWithName("EffectRecordBaseTable");
+            ctx.IgnoreClassWithName("EffectRecordTable");
+            ctx.IgnoreClassWithName("CriComponent");
 
             ctx.SetClassAsValueType("Vector2");
             ctx.SetClassAsValueType("Vector3");
@@ -119,6 +142,18 @@ namespace RangersSDKBindingsGenerator
             ctx.SetClassAsValueType("Matrix34");
             ctx.SetClassAsValueType("Matrix44");
             ctx.SetClassAsValueType("Position");
+            ctx.SetClassAsValueType("Rotation");
+
+            ctx.IgnoreClassWithName("Vector2");
+            ctx.IgnoreClassWithName("Vector3");
+            ctx.IgnoreClassWithName("Vector4");
+            ctx.IgnoreClassWithName("Quaternion");
+            ctx.IgnoreClassWithName("Matrix34");
+            ctx.IgnoreClassWithName("Matrix44");
+            ctx.IgnoreClassWithName("Position");
+            ctx.IgnoreClassWithName("Rotation");
+
+            ctx.SetClassAsValueType("Transform");
             ctx.SetClassAsValueType("HandleBase");
 
             ctx.SetClassAsValueType("RflClassEnum");
@@ -243,7 +278,7 @@ namespace RangersSDKBindingsGenerator
                 unit.FindNamespace("app")?.ExplicitlyIgnore();
                 //unit.FindNamespace("heur")?.ExplicitlyIgnore();
                 unit.FindNamespace("csl")?.FindNamespace("ut")?.ExplicitlyIgnore();
-                unit.FindNamespace("csl")?.FindNamespace("math")?.ExplicitlyIgnore();
+                //unit.FindNamespace("csl")?.FindNamespace("math")?.ExplicitlyIgnore();
                 //unit.FindNamespace("Cyan")?.ExplicitlyIgnore();
             }
 
@@ -292,6 +327,9 @@ namespace RangersSDKBindingsGenerator
             driver.Options.OutputDir = outputDir;
             driver.Options.CustomClassCodeCallback += GenerateInteropIsomorphism;
             driver.Options.GenerateClassTemplates = true;
+            driver.Options.GenerateSequentialLayout = false;
+            driver.Options.AllocFunction = "global::RangersSDK.Interop.Memory.AllocAligned";
+            driver.Options.FreeFunction = "global::RangersSDK.Interop.Memory.FreeAligned";
 
             var module = driver.Options.AddModule("RangersSDK");
             module.SharedLibraryName = "rangers-sdk";
@@ -321,6 +359,14 @@ namespace RangersSDKBindingsGenerator
     public nint GetUnmanaged({typeName} obj) {{ return obj.__Instance; }}
     public {typeName} GetManaged(nint obj) {{ return {typeName}.__GetOrCreateInstance(obj, false, true); }}
     public void ReleaseUnmanaged(nint obj) {{ }}
+}}
+
+public CastTargetSubType UnsafeCast<CastTargetSubType>() where CastTargetSubType : {typeName}
+{{
+    if (__ownsNativeInstance)
+        return this as CastTargetSubType;
+
+    return (CastTargetSubType) (object) typeof(CastTargetSubType).GetMethod(""__GetOrCreateInstance"", global::System.Reflection.BindingFlags.Static | global::System.Reflection.BindingFlags.NonPublic).Invoke(null, new object[] {{ __Instance, false, true }});
 }}");
                 gen.PopBlock(NewLineKind.BeforeNextBlock);
             }
